@@ -1,0 +1,36 @@
+steps:
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - '-c'
+      - >
+        if [ $BRANCH_NAME ]; then
+          cd /workspace/terraform
+          echo "TERRAFORM INIT" 
+        fi
+
+        terraform init -backend-config=bucket=cloudbuild1
+        -backend-config=prefix=state
+    id: tf init
+    entrypoint: sh
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - '-c'
+      - |
+        if [ $BRANCH_NAME ]; then
+          cd /workspace/terraform
+          echo "TERRAFORM PLAN" 
+        fi
+        terraform plan -out=deploy.tfplan
+    id: tf plan
+    entrypoint: sh
+  - name: 'hashicorp/terraform:1.0.0'
+    args:
+      - '-c'
+      - |
+        if [ $BRANCH_NAME ]; then
+          cd /workspace/terraform
+          echo "TERRAFORM APPLY" 
+        fi
+        terraform apply -auto-approve deploy.tfplan
+    id: tf apply
+    entrypoint: sh
