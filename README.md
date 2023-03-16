@@ -1,3 +1,3 @@
 # instance
 
-Create a mulitple instance with using terraform with cloudbuild
+Create a mulitple instance with using terraform and cloudbuild
